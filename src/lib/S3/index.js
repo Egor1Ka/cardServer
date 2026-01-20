@@ -1,4 +1,5 @@
 import cloudinaryAdapter from "./services/cloudinary.js";
+import awsAdapter from "./services/aws.js";
 
 const CLIENT_METHODS = ["bufferUpload", "base64Upload"];
 
@@ -12,6 +13,7 @@ const validateAdapterMethod = function (method) {
 };
 
 const paymentsCollection = {
+  aws: awsAdapter,
   cloudinary: cloudinaryAdapter,
 };
 
@@ -29,8 +31,8 @@ class S3Service {
     CLIENT_METHODS.forEach(validateAdapterMethod.bind(this));
   }
 
-  async base64Upload(buffer) {
-    return this.client.base64Upload(buffer);
+  async base64Upload(buffer, format = "auto") {
+    return this.client.base64Upload(buffer, format);
   }
 
   async bufferUpload(base64Str, format = "auto") {

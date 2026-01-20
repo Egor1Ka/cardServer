@@ -1,13 +1,9 @@
 import express from "express";
 import { httpResponse } from "../utils/http/httpResponse.js";
 import { generalStatus } from "../utils/http/httpStatus.js";
-import categoryRoutes from "./subroutes/categoryRoutes.js";
-import tagRoutes from "./subroutes/tagRoutes.js";
-import productRoutes from "./subroutes/productRoutes.js";
-import currencyRoutes from "./subroutes/currency.js";
-import attributeRoutes from "./subroutes/attributesRouter.js";
-import attributeValueRoutes from "./subroutes/attributesValueRouter.js";
-import orderRoutes from "./subroutes/orderRoutes.js";
+import cardRoutes from "./subroutes/cardRoutes.js";
+import containerRoutes from "./subroutes/containerRoutes.js";
+import userRoutes from "./subroutes/userRoutes.js";
 
 const router = express.Router();
 
@@ -15,13 +11,9 @@ router.get("/", (req, res) => {
   httpResponse(res, generalStatus.SUCCESS);
 });
 
-router.use("/category", categoryRoutes);
-router.use("/tag", tagRoutes);
-router.use("/product", productRoutes);
-router.use("/currency", currencyRoutes);
-router.use("/attribute", attributeRoutes);
-router.use("/attribute-values", attributeValueRoutes);
-router.use("/order", orderRoutes);
+router.use("/cards", cardRoutes);
+router.use("/container", containerRoutes);
+router.use("/user", userRoutes);
 
 // router.use("/user", userRoute);
 // router.use("/auth", authRoute);
