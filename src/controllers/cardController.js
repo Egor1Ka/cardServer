@@ -60,6 +60,19 @@ const getCards = async (req, res) => {
   }
 };
 
+const getCardsByModule = async (req, res) => {
+  try {
+    const cards = await cardServices.getCardsByModule(req.params.moduleId);
+    httpResponse(
+      res,
+      generalStatus.SUCCESS,
+      cards.map((card) => cardDto.toDTO(card)),
+    );
+  } catch (error) {
+    httpResponseError(res, error);
+  }
+};
+
 const updateCard = async (req, res) => {
   try {
     const cardInput = req.body?.data;
@@ -94,4 +107,4 @@ const deleteCard = async (req, res) => {
   }
 };
 
-export { createCard, getCard, getCards, updateCard, deleteCard };
+export { createCard, getCard, getCards, getCardsByModule, updateCard, deleteCard };

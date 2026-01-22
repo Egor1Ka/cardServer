@@ -30,7 +30,7 @@ const CardSchema = new Schema(
       enum: ["draft", "published", "archived"],
       default: ["draft"],
     },
-    containers: [{ type: ObjectId, ref: "Container" }],
+    modules: [{ type: ObjectId, ref: "Module" }],
     userId: { type: ObjectId, ref: "User" },
   },
   { timestamps: true }

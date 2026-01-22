@@ -3,6 +3,7 @@ import {
   createCard,
   getCard,
   getCards,
+  getCardsByModule,
   updateCard,
   deleteCard,
 } from "../../controllers/cardController.js";
@@ -13,6 +14,7 @@ const router = express.Router();
 
 router.post("/", upload.none(), createCard);
 router.get("/", getCards);
+router.get("/module/:moduleId", getCardsByModule);
 router.get("/:id", getCard);
 router.put("/:id", upload.none(), updateCard);
 router.delete("/:id", deleteCard);

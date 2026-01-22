@@ -1,8 +1,7 @@
 import { httpResponse, httpResponseError } from "../utils/http/httpResponse.js";
 import { generalStatus } from "../utils/http/httpStatus.js";
-import containerServices from "../services/containerServices.js";
-import containerDto from "../dto/containerDto.js";
-import cardDto from "../dto/cardDto.js";
+import moduleServices from "../services/moduleServices.js";
+import moduleDto from "../dto/moduleDto.js";
 
 /// берем оттельно фалы и мачим их с карточками ----
 
@@ -43,38 +42,38 @@ const mergeCardImages = (cards = [], files = []) => {
 
 ///----
 
-const createContainer = async (req, res) => {
+const createModule = async (req, res) => {
   try {
-    let containerInput = req.body?.data;
+    let moduleInput = req.body?.data;
 
-    if (typeof containerInput === "string") {
+    if (typeof moduleInput === "string") {
       try {
-        containerInput = JSON.parse(containerInput);
+        moduleInput = JSON.parse(moduleInput);
       } catch (parseError) {
-        console.log("container.create validation error: invalid JSON data");
+        console.log("module.create validation error: invalid JSON data");
         httpResponseError(res, generalStatus.BAD_REQUEST, "data must be JSON");
         return;
       }
     }
 
-    if (!containerInput) {
-      console.log("container.create validation error: missing data");
+    if (!moduleInput) {
+      console.log("module.create validation error: missing data");
       httpResponseError(res, generalStatus.BAD_REQUEST, "data is required");
       return;
     }
 
-    const { name, description } = containerInput;
-    const cards = mergeCardImages(containerInput.cards, req.files);
+    const { name, description } = moduleInput;
+    const cards = mergeCardImages(moduleInput.cards, req.files);
 
     if (!name) {
-      console.log("container.create validation error: missing name");
+      console.log("module.create validation error: missing name");
       httpResponseError(res, generalStatus.BAD_REQUEST, "name is required");
       return;
     }
 
     if (!Array.isArray(cards)) {
       console.log(
-        "container.create validation error: cards is not array",
+        "module.create validation error: cards is not array",
         typeof cards,
       );
       httpResponseError(res, generalStatus.BAD_REQUEST, "cards must be array");
@@ -84,7 +83,7 @@ const createContainer = async (req, res) => {
     for (const [index, card] of cards.entries()) {
       if (!card?.front?.text || !card?.back?.text) {
         console.log(
-          "container.create validation error: card missing front/back text",
+          "module.create validation error: card missing front/back text",
           { index, card },
         );
         httpResponseError(
@@ -96,14 +95,14 @@ const createContainer = async (req, res) => {
       }
     }
 
-    const { container, cards: createdCards } =
-      await containerServices.createContainerWithCards(
+    const { module: moduleDoc, cards: createdCards } =
+      await moduleServices.createModuleWithCards(
         { name, description },
         cards,
       );
 
     httpResponse(res, generalStatus.SUCCESS, {
-      container: containerDto.toDTO(container),
+      module: moduleDto.toDTO(moduleDoc),
       cards: createdCards.map((card) => cardDto.toDTO(card)),
     });
   } catch (error) {
@@ -111,4 +110,30 @@ const createContainer = async (req, res) => {
   }
 };
 
-export { createContainer };
+const getModules = async (req, res) => {
+  try {
+    const modules = await moduleServices.getModules();
+    httpResponse(
+      res,
+      generalStatus.SUCCESS,
+      modules.map((moduleDoc) => moduleDto.toDTO(moduleDoc)),
+    );
+  } catch (error) {
+    httpResponseError(res, error);
+  }
+};
+
+const getModule = async (req, res) => {
+  try {
+    const moduleDoc = await moduleServices.getModuleById(req.params.id);
+    if (!moduleDoc) {
+      httpResponseError(res, generalStatus.NOT_FOUND, "Module not found");
+      return;
+    }
+    httpResponse(res, generalStatus.SUCCESS, moduleDto.toDTO(moduleDoc));
+  } catch (error) {
+    httpResponseError(res, error);
+  }
+};
+
+export { createModule, getModules, getModule };

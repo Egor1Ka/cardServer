@@ -2,7 +2,7 @@ import express from "express";
 import { httpResponse } from "../utils/http/httpResponse.js";
 import { generalStatus } from "../utils/http/httpStatus.js";
 import cardRoutes from "./subroutes/cardRoutes.js";
-import containerRoutes from "./subroutes/containerRoutes.js";
+import moduleRoutes from "./subroutes/moduleRoutes.js";
 import userRoutes from "./subroutes/userRoutes.js";
 
 const router = express.Router();
@@ -12,7 +12,7 @@ router.get("/", (req, res) => {
 });
 
 router.use("/cards", cardRoutes);
-router.use("/container", containerRoutes);
+router.use("/module", moduleRoutes);
 router.use("/user", userRoutes);
 
 // router.use("/user", userRoute);

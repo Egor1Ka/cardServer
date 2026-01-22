@@ -26,8 +26,8 @@ export default {
       notes: data.notes,
       source: data.source,
       statusList: data.statusList,
-      containers: data.containers?.map((container) =>
-        container?._id ? container._id.toString() : container
+      modules: data.modules?.map((module) =>
+        module?._id ? module._id.toString() : module
       ),
       userId: data.userId?._id ? data.userId._id.toString() : data.userId,
       createdAt: data.createdAt,
@@ -42,7 +42,7 @@ export default {
     notes: dto?.notes,
     source: dto?.source,
     statusList: dto?.statusList || ["draft"],
-    containers: toObjectIdArray(dto?.containers),
+    modules: toObjectIdArray(dto?.modules),
     userId: dto?.userId ? toObjectId(dto.userId) : undefined,
     createdAt: dto?.createdAt,
     updatedAt: dto?.updatedAt,

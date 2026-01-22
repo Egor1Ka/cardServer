@@ -32,6 +32,10 @@ const getCards = async (filter = {}) => {
   return await cardRepository.getCards(filter);
 };
 
+const getCardsByModule = async (moduleId) => {
+  return await cardRepository.getCards({ modules: moduleId });
+};
+
 const updateCard = async (id, update) => {
   const frontImg = update?.front?.img;
   const backImg = update?.back?.img;
@@ -55,6 +59,7 @@ export default {
   createCard,
   getCardById,
   getCards,
+  getCardsByModule,
   updateCard,
   deleteCard,
 };
