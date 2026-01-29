@@ -9,9 +9,10 @@ const createModuleWithCards = async (moduleInput, cardsInput = []) => {
 
   try {
     await session.withTransaction(async () => {
-      const { name, description } = moduleInput;
+      const { name, description, createdBy } = moduleInput;
+
       const moduleDoc = await moduleRepository.createModule(
-        { name, description },
+        { name, description, createdBy },
         { session },
       );
 

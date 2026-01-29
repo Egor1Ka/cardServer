@@ -6,8 +6,9 @@ const ModuleSchema = new Schema(
     name: { type: String, required: true },
     description: { type: String },
     cards: [{ type: ObjectId, ref: "Card" }],
+    createdBy: { type: ObjectId, ref: "User" },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default model("Module", ModuleSchema);

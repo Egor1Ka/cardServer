@@ -8,6 +8,10 @@ const getUserById = async (id) => {
   return await userRepository.getUserById(id);
 };
 
+const getUser = async (filter = {}) => {
+  return await userRepository.getUser(filter);
+};
+
 const getUsers = async (filter = {}) => {
   return await userRepository.getUsers(filter);
 };
@@ -26,4 +30,5 @@ export default {
   getUsers,
   updateUser,
   deleteUser,
+  getUser,
 };

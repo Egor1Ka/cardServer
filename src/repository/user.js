@@ -12,6 +12,10 @@ const getUsers = async (filter = {}) => {
   return await User.find(filter);
 };
 
+const getUser = async (filter = {}) => {
+  return await User.findOne(filter);
+};
+
 const updateUser = async (id, update) => {
   return await User.findByIdAndUpdate(id, update, { new: true });
 };
@@ -24,6 +28,7 @@ export default {
   createUser,
   getUserById,
   getUsers,
+  getUser,
   updateUser,
   deleteUser,
 };

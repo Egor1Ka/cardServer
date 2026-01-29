@@ -1,6 +1,7 @@
 import { httpResponse, httpResponseError } from "../utils/http/httpResponse.js";
 import { generalStatus } from "../utils/http/httpStatus.js";
 import userServices from "../services/userServices.js";
+import userDto from "../dto/userDto.js";
 
 const createUser = async (req, res) => {
   try {
@@ -12,12 +13,16 @@ const createUser = async (req, res) => {
 
     const { name, email } = userInput;
     if (!name || !email) {
-      httpResponseError(res, generalStatus.BAD_REQUEST, "name and email required");
+      httpResponseError(
+        res,
+        generalStatus.BAD_REQUEST,
+        "name and email required",
+      );
       return;
     }
 
     const user = await userServices.createUser(userInput);
-    httpResponse(res, generalStatus.SUCCESS, user);
+    httpResponse(res, generalStatus.SUCCESS, userDto.toDTO(user));
   } catch (error) {
     httpResponseError(res, error);
   }
@@ -30,7 +35,7 @@ const getUser = async (req, res) => {
       httpResponseError(res, generalStatus.NOT_FOUND, "User not found");
       return;
     }
-    httpResponse(res, generalStatus.SUCCESS, user);
+    httpResponse(res, generalStatus.SUCCESS, userDto.toDTO(user));
   } catch (error) {
     httpResponseError(res, error);
   }
@@ -42,7 +47,11 @@ const getUsers = async (req, res) => {
     if (req.query.role) filter.role = req.query.role;
     if (req.query.email) filter.email = req.query.email;
     const users = await userServices.getUsers(filter);
-    httpResponse(res, generalStatus.SUCCESS, users);
+    httpResponse(
+      res,
+      generalStatus.SUCCESS,
+      users.map((item) => userDto.toDTO(item))
+    );
   } catch (error) {
     httpResponseError(res, error);
   }
@@ -61,7 +70,7 @@ const updateUser = async (req, res) => {
       httpResponseError(res, generalStatus.NOT_FOUND, "User not found");
       return;
     }
-    httpResponse(res, generalStatus.SUCCESS, user);
+    httpResponse(res, generalStatus.SUCCESS, userDto.toDTO(user));
   } catch (error) {
     httpResponseError(res, error);
   }
@@ -80,4 +89,24 @@ const deleteUser = async (req, res) => {
   }
 };
 
-export { createUser, getUser, getUsers, updateUser, deleteUser };
+const getProfile = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+
+    if (!userId) {
+      httpResponseError(res, generalStatus.UNAUTHORIZED, "Unauthorized");
+      return;
+    }
+
+    const user = await userServices.getUserById(userId);
+    if (!user) {
+      httpResponseError(res, generalStatus.NOT_FOUND, "User not found");
+      return;
+    }
+    httpResponse(res, generalStatus.SUCCESS, userDto.toDTO(user));
+  } catch (error) {
+    httpResponseError(res, error);
+  }
+};
+
+export { createUser, getUser, getUsers, updateUser, deleteUser, getProfile };

@@ -18,11 +18,11 @@ const updateModule = async (id, update, options = {}) => {
 };
 
 const getModules = async (filter = {}) => {
-  return await Module.find(filter);
+  return await Module.find(filter).populate("createdBy");
 };
 
 const getModuleById = async (id) => {
-  return await Module.findById(id);
+  return await Module.findById(id).populate("createdBy");
 };
 
 export default {

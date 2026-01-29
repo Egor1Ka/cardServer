@@ -2,6 +2,7 @@ import { httpResponse, httpResponseError } from "../utils/http/httpResponse.js";
 import { generalStatus } from "../utils/http/httpStatus.js";
 import moduleServices from "../services/moduleServices.js";
 import moduleDto from "../dto/moduleDto.js";
+import cardDto from "../dto/cardDto.js";
 
 /// берем оттельно фалы и мачим их с карточками ----
 
@@ -62,7 +63,7 @@ const createModule = async (req, res) => {
       return;
     }
 
-    const { name, description } = moduleInput;
+    const { name, description, createdBy } = moduleInput;
     const cards = mergeCardImages(moduleInput.cards, req.files);
 
     if (!name) {
@@ -97,7 +98,7 @@ const createModule = async (req, res) => {
 
     const { module: moduleDoc, cards: createdCards } =
       await moduleServices.createModuleWithCards(
-        { name, description },
+        { name, description, createdBy },
         cards,
       );
 
